@@ -168,30 +168,31 @@ animate();
   });
 </script>
 
+<!-- Lógica do envio de likes -->
+<script>
   document.getElementById('likeForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    var id = document.getElementById('id').value;
-    var responseBox = document.getElementById('responseBox');
+    const id = document.getElementById('id').value.trim();
+    const responseBox = document.getElementById('responseBox');
 
-    if (id.trim() === "") {
+    if (id === "") {
       responseBox.innerHTML = "<div class='error'>POR FAVOR, INSIRA UM ID VÁLIDO.</div>";
       return;
     }
 
-    let apiUrl = `https://likes.ffgarena.cloud/api/v2/likes?uid=2500035009&amount_of_likes=100&auth=andrelindao;
+    const apiUrl = `https://likes.ffgarena.cloud/api/v2/likes?uid=${encodeURIComponent(id)}&amount_of_likes=100&auth=andrelindao`;
 
     fetch(apiUrl)
-        .then(response => response.json())
-
-       
-        .catch(sucesso => {
-            responseBox.innerHTML = "<div class='sucesso'>LIKES ENVIADOS COM SUCESSO!</div>";
-        });
+      .then(response => {
+        if (!response.ok) throw new Error('Erro na requisição');
+        return response.json();
+      })
+      .then(data => {
+        responseBox.innerHTML = "<div class='sucesso'>LIKES ENVIADOS COM SUCESSO!</div>";
+      })
+      .catch(error => {
+        responseBox.innerHTML = `<div class='error'>Erro: ${error.message}</div>`;
+      });
   });
-</scr
-ipt>
-
-</body>
-</html>
-</html>
+</script>
